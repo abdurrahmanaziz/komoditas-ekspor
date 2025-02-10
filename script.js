@@ -78,3 +78,14 @@ document.getElementById("addDataForm").addEventListener("submit", async function
 
 // Panggil fetchData saat halaman dimuat
 fetchData();
+async function fetchData() {
+    let { data, error } = await supabase.from('komoditas_ekspor').select('*');
+    
+    console.log("Data dari Supabase:", data); // Debugging
+
+    if (error) {
+        console.error("Gagal mengambil data:", error);
+        return;
+    }
+    displayData(data);
+}
