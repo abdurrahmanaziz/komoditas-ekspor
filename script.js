@@ -35,4 +35,18 @@ document.addEventListener("DOMContentLoaded", async function () {
                         <td class="border px-4 py-2">${item.kabupaten || "-"}</td>
                         <td class="border px-4 py-2">${item.kecamatan || "-"}</td>
                         <td class="border px-4 py-2">${item.desa || "-"}</td>
-                        <td class="border px-4 py-2">${item.komoditas_pan
+                        <td class="border px-4 py-2">${item.komoditas_pangan || "-"}</td>
+                        <td class="border px-4 py-2">${item.komoditas_non_pangan || "-"}</td>
+                    </tr>
+                `;
+            });
+
+        } catch (err) {
+            console.error("Terjadi kesalahan:", err);
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Kesalahan dalam mengambil data.</td></tr>`;
+        }
+    }
+
+    // Panggil fungsi saat halaman dimuat
+    fetchData();
+});
