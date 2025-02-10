@@ -16,17 +16,27 @@ async function fetchData() {
 // Tampilkan data dalam tabel
 function displayData(data) {
     const tableBody = document.getElementById("dataContainer");
-    tableBody.innerHTML = "";
-    
+    tableBody.innerHTML = ""; 
+
+    if (data.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='5'>Tidak ada data</td></tr>";
+        return;
+    }
+
     data.forEach(item => {
         let row = `<tr>
-            <td class="py-2 px-6 border">${item.kabupaten}</td>
-            <td class="py-2 px-6 border">${item.kecamatan}</td>
-            <td class="py-2 px-6 border">${item.desa}</td>
-            <td class="py-2 px-6 border">${item.komoditas_pangan}</td>
-            <td class="py-2 px-6 border">${item.komoditas_non_pangan}</td>
+            <td>${item.kabupaten || "-"}</td>
+            <td>${item.kecamatan || "-"}</td>
+            <td>${item.desa || "-"}</td>
+            <td>${item.komoditas_pangan || "-"}</td>
+            <td>${item.komoditas_non_pangan || "-"}</td>
         </tr>`;
         tableBody.innerHTML += row;
+    });
+
+    console.log("Data berhasil ditampilkan di tabel");
+}
+
     });
 }
 
