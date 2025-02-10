@@ -1,88 +1,45 @@
-// Koneksi ke Supabase
+// 1. Hubungkan ke Supabase
 const SUPABASE_URL = "https://tbhqdlrjymbskvdetujr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFkbHJqeW1ic2t2ZGV0dWpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNzI4NjAsImV4cCI6MjA1NDc0ODg2MH0.dbzFaxxU9DNsgZJg55sEldVBZKxwW-dY7hAa5x7qnw0";
+
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Ambil data dari tabel `komoditas_ekspor`
+// 2. Ambil data dari tabel "komoditas_ekspor"
 async function fetchData() {
-    let { data, error } = await supabase.from('komoditas_ekspor').select('*');
-    if (error) {
-        console.error("Gagal mengambil data:", error);
-        return;
+    try {
+        let { data, error } = await supabase.from("komoditas_ekspor").select("*");
+
+        if (error) {
+            console.error("Gagal mengambil data:", error);
+            return;
+        }
+
+        console.log("Data berhasil diambil:", data);
+        displayData(data);
+    } catch (err) {
+        console.error("Terjadi kesalahan:", err);
     }
-    displayData(data);
 }
 
-// Tampilkan data dalam tabel
+// 3. Tampilkan data ke dalam tabel HTML
 function displayData(data) {
-    const tableBody = document.getElementById("dataContainer");
-    tableBody.innerHTML = ""; 
+    const tableBody = document.getElementById("table-body");
+    tableBody.innerHTML = ""; // Kosongkan tabel sebelum menambahkan data baru
 
-    if (data.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='5'>Tidak ada data</td></tr>";
-        return;
-    }
-
-    data.forEach(item => {
-        let row = `<tr>
-            <td>${item.kabupaten || "-"}</td>
-            <td>${item.kecamatan || "-"}</td>
-            <td>${item.desa || "-"}</td>
-            <td>${item.komoditas_pangan || "-"}</td>
-            <td>${item.komoditas_non_pangan || "-"}</td>
-        </tr>`;
+    data.forEach((item, index) => {
+        let row = `
+            <tr>
+                <td class="border px-4 py-2">${index + 1}</td>
+                <td class="border px-4 py-2">${item.kabupaten_kota}</td>
+                <td class="border px-4 py-2">${item.kecamatan}</td>
+                <td class="border px-4 py-2">${item.desa}</td>
+                <td class="border px-4 py-2">${item.komoditas_pangan ? "ADA" : "TIDAK ADA"}</td>
+                <td class="border px-4 py-2">${item.komoditas_non_pangan ? "ADA" : "TIDAK ADA"}</td>
+            </tr>
+        `;
         tableBody.innerHTML += row;
     });
-
-    console.log("Data berhasil ditampilkan di tabel");
 }
 
-// Fitur pencarian data
-document.getElementById("searchInput").addEventListener("input", function() {
-    let searchValue = this.value.toLowerCase();
-    let rows = document.querySelectorAll("#dataContainer tr");
-
-    rows.forEach(row => {
-        let text = row.innerText.toLowerCase();
-        row.style.display = text.includes(searchValue) ? "" : "none";
-    });
-});
-
-// Form Tambah Data ke tabel `komoditas_ekspor`
-document.getElementById("addDataForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    let newData = {
-        kabupaten: document.getElementById("kabupaten").value,
-        kecamatan: document.getElementById("kecamatan").value,
-        desa: document.getElementById("desa").value,
-        komoditas_pangan: document.getElementById("komoditasPangan").value,
-        komoditas_non_pangan: document.getElementById("komoditasNonPangan").value
-    };
-
-    let { data, error } = await supabase.from('komoditas_ekspor').insert([newData]);
-
-    if (error) {
-        console.error("Gagal menambahkan data:", error);
-        alert("Gagal menambahkan data!");
-    } else {
-        alert("Data berhasil ditambahkan!");
-        fetchData();
-    }
-
-    this.reset();
-});
-
-// Panggil fetchData saat halaman dimuat
-fetchData();
-async function fetchData() {
-    let { data, error } = await supabase.from('komoditas_ekspor').select('*');
-    
-    console.log("Data dari Supabase:", data); // Debugging
-
-    if (error) {
-        console.error("Gagal mengambil data:", error);
-        return;
-    }
-    displayData(data);
-}
+// 4. Panggil fetchData() saat halaman dimuat
+document.addEventListener("DOMContentLoaded", fetchData);
