@@ -5,7 +5,7 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Ambil data dari Supabase
 async function fetchData() {
-    let { data, error } = await supabase.from('komoditas').select('*');
+    let { data, error } = await supabase.from('komoditas_ekspor').select('*');
     if (error) {
         console.error("Gagal mengambil data:", error);
         return;
