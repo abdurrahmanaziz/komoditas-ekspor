@@ -1,52 +1,72 @@
-// Pastikan Supabase tersedia sebelum digunakan
+// Pastikan Supabase sudah dimuat sebelum digunakan
 document.addEventListener("DOMContentLoaded", async function () {
-    // Impor Supabase
-    const { createClient } = supabase;
+    console.log("🚀 Halaman telah dimuat. Supabase siap digunakan!");
 
     // Inisialisasi Supabase
     const SUPABASE_URL = "https://tbhqdlrjymbskvdetujr.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFkbHJqeW1ic2t2ZGV0dWpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNzI4NjAsImV4cCI6MjA1NDc0ODg2MH0.dbzFaxxU9DNsgZJg55sEldVBZKxwW-dY7hAa5x7qnw0";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Fungsi untuk mengambil data komoditas ekspor
-    async function fetchData() {
-        const tableBody = document.getElementById("table-body");
-        tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">Mengambil data...</td></tr>`;
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // Fungsi untuk mengambil data dari tabel tertentu
+    async function getData(tableName) {
         try {
-            let { data, error } = await supabase.from("komoditas_ekspor").select("*");
-
-            if (error) {
-                console.error("Error mengambil data:", error.message);
-                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
-                return;
-            }
-
-            if (data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">Tidak ada data.</td></tr>`;
-                return;
-            }
-
-            tableBody.innerHTML = "";
-            data.forEach((item, index) => {
-                tableBody.innerHTML += `
-                    <tr>
-                        <td class="border px-4 py-2">${index + 1}</td>
-                        <td class="border px-4 py-2">${item.kabupaten || "-"}</td>
-                        <td class="border px-4 py-2">${item.kecamatan || "-"}</td>
-                        <td class="border px-4 py-2">${item.desa || "-"}</td>
-                        <td class="border px-4 py-2">${item.komoditas_pangan || "-"}</td>
-                        <td class="border px-4 py-2">${item.komoditas_non_pangan || "-"}</td>
-                    </tr>
-                `;
-            });
-
+            const { data, error } = await supabase.from(tableName).select('*');
+            if (error) throw error;
+            console.log(`✅ Data dari tabel ${tableName}:`, data);
+            return data;
         } catch (err) {
-            console.error("Terjadi kesalahan:", err);
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Kesalahan dalam mengambil data.</td></tr>`;
+            console.error("❌ Error mengambil data:", err.message);
         }
     }
 
-    // Panggil fungsi saat halaman dimuat
-    fetchData();
+    // Fungsi untuk menambahkan data ke tabel tertentu
+    async function addData(tableName, newData) {
+        try {
+            const { data, error } = await supabase.from(tableName).insert([newData]);
+            if (error) throw error;
+            console.log(`✅ Data berhasil ditambahkan ke tabel ${tableName}:`, data);
+            return data;
+        } catch (err) {
+            console.error("❌ Error menambahkan data:", err.message);
+        }
+    }
+
+    // Fungsi untuk memperbarui data berdasarkan ID
+    async function updateData(tableName, id, updatedData) {
+        try {
+            const { data, error } = await supabase.from(tableName).update(updatedData).eq("id", id);
+            if (error) throw error;
+            console.log(`✅ Data di tabel ${tableName} berhasil diperbarui:`, data);
+            return data;
+        } catch (err) {
+            console.error("❌ Error memperbarui data:", err.message);
+        }
+    }
+
+    // Fungsi untuk menghapus data berdasarkan ID
+    async function deleteData(tableName, id) {
+        try {
+            const { data, error } = await supabase.from(tableName).delete().eq("id", id);
+            if (error) throw error;
+            console.log(`✅ Data di tabel ${tableName} berhasil dihapus:`, data);
+            return data;
+        } catch (err) {
+            console.error("❌ Error menghapus data:", err.message);
+        }
+    }
+
+    // Contoh penggunaan:
+    await getData("users"); // Ambil semua data dari tabel "users"
+    
+    await addData("users", { 
+        name: "John Doe", 
+        email: "johndoe@example.com" 
+    }); // Tambahkan user baru
+
+    await updateData("users", 1, { 
+        name: "Updated Name" 
+    }); // Update user dengan id = 1
+
+    await deleteData("users", 2); // Hapus user dengan id = 2
 });
