@@ -1,54 +1,49 @@
-// Pastikan Supabase SDK sudah dimuat lebih dulu di HTML
-const { createClient } = supabase;
+// Import Supabase
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 // Inisialisasi Supabase
-const supabaseUrl = "https://tbhqdlrjymbskvdetujr.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFkbHJqeW1ic2t2ZGV0dWpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNzI4NjAsImV4cCI6MjA1NDc0ODg2MH0.dbzFaxxU9DNsgZJg55sEldVBZKxwW-dY7hAa5x7qnw0";
+const SUPABASE_URL = "https://tbhqdlrjymbskvdetujr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFkbHJqeW1ic2t2ZGV0dWpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNzI4NjAsImV4cCI6MjA1NDc0ODg2MH0.dbzFaxxU9DNsgZJg55sEldVBZKxwW-dY7hAa5x7qnw0";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-console.log("✅ Supabase berhasil diinisialisasi:", supabase);
-
-// Fungsi untuk mengambil data dari Supabase
+// Fungsi untuk mengambil data komoditas ekspor
 async function fetchData() {
+    const tableBody = document.getElementById("table-body");
+    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">Mengambil data...</td></tr>`;
+
     try {
-        const tableBody = document.getElementById("data-table");
+        let { data, error } = await supabase.from("komoditas_ekspor").select("*");
 
-        // Panggil data dari tabel "komoditas_ekspor"
-        const { data, error } = await supabase.from("komoditas_ekspor").select("*");
-
-        if (error) throw error;
-
-        // Kosongkan isi tabel sebelum memasukkan data baru
-        tableBody.innerHTML = "";
-
-        if (data.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-4">Tidak ada data</td></tr>`;
+        if (error) {
+            console.error("Error mengambil data:", error.message);
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
             return;
         }
 
-        // Loop data dan masukkan ke dalam tabel
+        if (data.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">Tidak ada data.</td></tr>`;
+            return;
+        }
+
+        tableBody.innerHTML = "";
         data.forEach((item, index) => {
-            const row = `
+            tableBody.innerHTML += `
                 <tr>
-                    <td class="border border-gray-300 p-2 text-center">${index + 1}</td>
-                    <td class="border border-gray-300 p-2">${item.kabupaten || "-"}</td>
-                    <td class="border border-gray-300 p-2">${item.kecamatan || "-"}</td>
-                    <td class="border border-gray-300 p-2">${item.desa || "-"}</td>
-                    <td class="border border-gray-300 p-2">${item.komoditas_pangan || "-"}</td>
-                    <td class="border border-gray-300 p-2">${item.komoditas_non_pangan || "-"}</td>
+                    <td class="border px-4 py-2">${index + 1}</td>
+                    <td class="border px-4 py-2">${item.kabupaten || "-"}</td>
+                    <td class="border px-4 py-2">${item.kecamatan || "-"}</td>
+                    <td class="border px-4 py-2">${item.desa || "-"}</td>
+                    <td class="border px-4 py-2">${item.komoditas_pangan || "-"}</td>
+                    <td class="border px-4 py-2">${item.komoditas_non_pangan || "-"}</td>
                 </tr>
             `;
-            tableBody.innerHTML += row;
         });
 
-        console.log("✅ Data berhasil diambil:", data);
-
     } catch (err) {
-        console.error("❌ Terjadi kesalahan saat mengambil data:", err);
-        document.getElementById("data-table").innerHTML = `<tr><td colspan="6" class="text-center p-4 text-red-500">Gagal mengambil data</td></tr>`;
+        console.error("Terjadi kesalahan:", err);
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Kesalahan dalam mengambil data.</td></tr>`;
     }
 }
 
-// Jalankan fungsi fetchData setelah DOM selesai dimuat
+// Panggil fungsi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", fetchData);
