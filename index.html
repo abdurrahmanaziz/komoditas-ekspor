@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Komoditas Ekspor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Pencarian Komoditas Ekspor</h1>
+
+    <!-- Form Pencarian -->
+    <label for="kabupaten">Kabupaten/Kota:</label>
+    <input type="text" id="kabupaten" placeholder="Masukkan kabupaten">
+
+    <label for="kecamatan">Kecamatan:</label>
+    <input type="text" id="kecamatan" placeholder="Masukkan kecamatan">
+
+    <label for="desa">Desa:</label>
+    <input type="text" id="desa" placeholder="Masukkan desa">
+
+    <button onclick="cariKomoditas()">Cari</button>
+
+    <!-- Tabel Hasil -->
+    <table>
+        <thead>
+            <tr>
+                <th>Kabupaten/Kota</th>
+                <th>Kecamatan</th>
+                <th>Desa</th>
+                <th>Komoditas Pangan</th>
+                <th>Komoditas Non Pangan</th>
+            </tr>
+        </thead>
+        <tbody id="hasil">
+            <!-- Data akan diisi di sini -->
+        </tbody>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+</html>
