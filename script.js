@@ -8,48 +8,48 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Fungsi untuk mengambil data dari tabel tertentu
-    async function getData(tableName) {
+    // Fungsi untuk mengambil data dari tabel komoditas_ekspor
+    async function getData() {
         try {
-            const { data, error } = await supabase.from(tableName).select('*');
+            const { data, error } = await supabase.from("komoditas_ekspor").select('*');
             if (error) throw error;
-            console.log(`✅ Data dari tabel ${tableName}:`, data);
+            console.log("✅ Data dari tabel komoditas_ekspor:", data);
             return data;
         } catch (err) {
             console.error("❌ Error mengambil data:", err.message);
         }
     }
 
-    // Fungsi untuk menambahkan data ke tabel tertentu
-    async function addData(tableName, newData) {
+    // Fungsi untuk menambahkan data ke tabel komoditas_ekspor
+    async function addData(newData) {
         try {
-            const { data, error } = await supabase.from(tableName).insert([newData]);
+            const { data, error } = await supabase.from("komoditas_ekspor").insert([newData]);
             if (error) throw error;
-            console.log(`✅ Data berhasil ditambahkan ke tabel ${tableName}:`, data);
+            console.log("✅ Data berhasil ditambahkan ke tabel komoditas_ekspor:", data);
             return data;
         } catch (err) {
             console.error("❌ Error menambahkan data:", err.message);
         }
     }
 
-    // Fungsi untuk memperbarui data berdasarkan ID
-    async function updateData(tableName, id, updatedData) {
+    // Fungsi untuk memperbarui data berdasarkan ID di tabel komoditas_ekspor
+    async function updateData(id, updatedData) {
         try {
-            const { data, error } = await supabase.from(tableName).update(updatedData).eq("id", id);
+            const { data, error } = await supabase.from("komoditas_ekspor").update(updatedData).eq("id", id);
             if (error) throw error;
-            console.log(`✅ Data di tabel ${tableName} berhasil diperbarui:`, data);
+            console.log("✅ Data di tabel komoditas_ekspor berhasil diperbarui:", data);
             return data;
         } catch (err) {
             console.error("❌ Error memperbarui data:", err.message);
         }
     }
 
-    // Fungsi untuk menghapus data berdasarkan ID
-    async function deleteData(tableName, id) {
+    // Fungsi untuk menghapus data berdasarkan ID di tabel komoditas_ekspor
+    async function deleteData(id) {
         try {
-            const { data, error } = await supabase.from(tableName).delete().eq("id", id);
+            const { data, error } = await supabase.from("komoditas_ekspor").delete().eq("id", id);
             if (error) throw error;
-            console.log(`✅ Data di tabel ${tableName} berhasil dihapus:`, data);
+            console.log("✅ Data di tabel komoditas_ekspor berhasil dihapus:", data);
             return data;
         } catch (err) {
             console.error("❌ Error menghapus data:", err.message);
@@ -57,16 +57,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // Contoh penggunaan:
-    await getData("users"); // Ambil semua data dari tabel "users"
+    await getData(); // Ambil semua data dari tabel komoditas_ekspor
     
-    await addData("users", { 
-        name: "John Doe", 
-        email: "johndoe@example.com" 
-    }); // Tambahkan user baru
+    await addData({ 
+        nama_komoditas: "Kopi Arabika", 
+        negara_tujuan: "Jepang", 
+        volume: 500, 
+        satuan: "Kg" 
+    }); // Tambahkan data baru
 
-    await updateData("users", 1, { 
-        name: "Updated Name" 
-    }); // Update user dengan id = 1
+    await updateData(1, { 
+        volume: 600 
+    }); // Update data dengan id = 1
 
-    await deleteData("users", 2); // Hapus user dengan id = 2
+    await deleteData(2); // Hapus data dengan id = 2
 });
