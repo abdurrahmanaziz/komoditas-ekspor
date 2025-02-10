@@ -1,9 +1,9 @@
-// Koneksi ke Supabase (Sudah diganti dengan data yang kamu berikan)
+// Koneksi ke Supabase
 const SUPABASE_URL = "https://tbhqdlrjymbskvdetujr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiaHFkbHJqeW1ic2t2ZGV0dWpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNzI4NjAsImV4cCI6MjA1NDc0ODg2MH0.dbzFaxxU9DNsgZJg55sEldVBZKxwW-dY7hAa5x7qnw0";
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Ambil data dari Supabase
+// Ambil data dari tabel `komoditas_ekspor`
 async function fetchData() {
     let { data, error } = await supabase.from('komoditas_ekspor').select('*');
     if (error) {
@@ -13,7 +13,7 @@ async function fetchData() {
     displayData(data);
 }
 
-// Tampilkan data di tabel
+// Tampilkan data dalam tabel
 function displayData(data) {
     const tableBody = document.getElementById("dataContainer");
     tableBody.innerHTML = "";
@@ -30,7 +30,7 @@ function displayData(data) {
     });
 }
 
-// Fitur Pencarian
+// Fitur pencarian data
 document.getElementById("searchInput").addEventListener("input", function() {
     let searchValue = this.value.toLowerCase();
     let rows = document.querySelectorAll("#dataContainer tr");
@@ -41,7 +41,7 @@ document.getElementById("searchInput").addEventListener("input", function() {
     });
 });
 
-// Form Tambah Data
+// Form Tambah Data ke tabel `komoditas_ekspor`
 document.getElementById("addDataForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -53,7 +53,7 @@ document.getElementById("addDataForm").addEventListener("submit", async function
         komoditas_non_pangan: document.getElementById("komoditasNonPangan").value
     };
 
-    let { data, error } = await supabase.from('komoditas').insert([newData]);
+    let { data, error } = await supabase.from('komoditas_ekspor').insert([newData]);
 
     if (error) {
         console.error("Gagal menambahkan data:", error);
