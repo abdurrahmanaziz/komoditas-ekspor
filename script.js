@@ -37,9 +37,6 @@ function displayData(data) {
     console.log("Data berhasil ditampilkan di tabel");
 }
 
-    });
-}
-
 // Fitur pencarian data
 document.getElementById("searchInput").addEventListener("input", function() {
     let searchValue = this.value.toLowerCase();
