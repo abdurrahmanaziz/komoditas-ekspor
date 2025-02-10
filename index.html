@@ -3,40 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencarian Komoditas Ekspor</title>
+    <title>Komoditas Ekspor Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">Cari Komoditas Ekspor</h1>
+        
+        <!-- Search Input -->
+        <div class="flex justify-center">
+            <input type="text" id="searchInput" class="p-3 border rounded-lg w-1/2" placeholder="Cari berdasarkan Kabupaten/Kota...">
+        </div>
 
-    <h1>Pencarian Komoditas Ekspor</h1>
-
-    <!-- Form Pencarian -->
-    <label for="kabupaten">Kabupaten/Kota:</label>
-    <input type="text" id="kabupaten" placeholder="Masukkan kabupaten">
-
-    <label for="kecamatan">Kecamatan:</label>
-    <input type="text" id="kecamatan" placeholder="Masukkan kecamatan">
-
-    <label for="desa">Desa:</label>
-    <input type="text" id="desa" placeholder="Masukkan desa">
-
-    <button onclick="cariKomoditas()">Cari</button>
-
-    <!-- Tabel Hasil -->
-    <table>
-        <thead>
-            <tr>
-                <th>Kabupaten/Kota</th>
-                <th>Kecamatan</th>
-                <th>Desa</th>
-                <th>Komoditas Pangan</th>
-                <th>Komoditas Non Pangan</th>
-            </tr>
-        </thead>
-        <tbody id="hasil">
-            <!-- Data akan diisi di sini -->
-        </tbody>
-    </table>
+        <!-- Tabel Data -->
+        <div class="mt-6 overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 shadow-lg rounded-lg">
+                <thead>
+                    <tr class="bg-blue-500 text-white">
+                        <th class="py-3 px-6 text-left">Kabupaten/Kota</th>
+                        <th class="py-3 px-6 text-left">Kecamatan</th>
+                        <th class="py-3 px-6 text-left">Desa</th>
+                        <th class="py-3 px-6 text-left">Komoditas Pangan</th>
+                        <th class="py-3 px-6 text-left">Komoditas Non-Pangan</th>
+                    </tr>
+                </thead>
+                <tbody id="dataContainer">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
