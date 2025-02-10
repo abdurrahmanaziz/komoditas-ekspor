@@ -1,42 +1,36 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+// Data Dummy (Nanti bisa diganti dengan data dari database)
+const komoditas = [
+    { kabupaten: "Malang", kecamatan: "Dau", desa: "Landungsari", pangan: "Kopi", nonPangan: "Kayu Manis" },
+    { kabupaten: "Surabaya", kecamatan: "Gubeng", desa: "Kertajaya", pangan: "Padi", nonPangan: "Rotan" },
+    { kabupaten: "Bandung", kecamatan: "Cidadap", desa: "Sukajadi", pangan: "Teh", nonPangan: "Karet" }
+];
 
-// Inisialisasi Supabase
-const SUPABASE_URL = "https://YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const searchInput = document.getElementById("searchInput");
+const dataContainer = document.getElementById("dataContainer");
 
-// Fungsi pencarian
-async function cariKomoditas() {
-    const kabupaten = document.getElementById("kabupaten").value;
-    const kecamatan = document.getElementById("kecamatan").value;
-    const desa = document.getElementById("desa").value;
-
-    let query = supabase.from("komoditas_ekspor").select("*");
-
-    if (kabupaten) query = query.eq("kabupaten", kabupaten);
-    if (kecamatan) query = query.eq("kecamatan", kecamatan);
-    if (desa) query = query.eq("desa", desa);
-
-    const { data, error } = await query;
-    
-    if (error) {
-        console.error("Gagal mengambil data:", error);
-        return;
-    }
-
-    const hasil = document.getElementById("hasil");
-    hasil.innerHTML = ""; // Kosongkan tabel sebelum isi ulang
-
+// Fungsi untuk menampilkan data di tabel
+function displayData(data) {
+    dataContainer.innerHTML = "";
     data.forEach(item => {
-        const row = `
-            <tr>
-                <td>${item.kabupaten}</td>
-                <td>${item.kecamatan}</td>
-                <td>${item.desa}</td>
-                <td>${item.komoditas_pangan}</td>
-                <td>${item.komoditas_non_pangan}</td>
-            </tr>
-        `;
-        hasil.innerHTML += row;
+        const row = `<tr class="border-b">
+                        <td class="py-2 px-6">${item.kabupaten}</td>
+                        <td class="py-2 px-6">${item.kecamatan}</td>
+                        <td class="py-2 px-6">${item.desa}</td>
+                        <td class="py-2 px-6">${item.pangan}</td>
+                        <td class="py-2 px-6">${item.nonPangan}</td>
+                    </tr>`;
+        dataContainer.innerHTML += row;
     });
 }
+
+// Menampilkan semua data saat halaman dimuat
+displayData(komoditas);
+
+// Fungsi pencarian
+searchInput.addEventListener("input", function () {
+    const query = this.value.toLowerCase();
+    const filteredData = komoditas.filter(item =>
+        item.kabupaten.toLowerCase().includes(query)
+    );
+    displayData(filteredData);
+});
