@@ -6,7 +6,7 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Fungsi untuk mengambil data dari Supabase
 async function fetchKomoditas() {
     let { data, error } = await supabase
-        .from('komoditas')  // Nama tabel di Supabase
+        .from('komoditas_ekspor')  // Nama tabel di Supabase
         .select('*');
 
     if (error) {
